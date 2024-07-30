@@ -58,3 +58,7 @@ class FileStorage:
             return
         key = "{}.{}".format(type(obj).__name__, obj.id)
         del FileStorage.__objects[key]
+
+    def close(self):
+        """ call reload method """
+        self.reload()

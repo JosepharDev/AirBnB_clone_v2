@@ -23,11 +23,12 @@ class State(BaseModel, Base):
         backref="state"
     )
 
-    @property
-    def cities(self):
-        """ returns the list of City instances """
-        list_city = []
-        for city in list(models.storage.all(City).values()):
-            if city.state_id == self.id:
-                list_city.append(city)
-        return list_city
+    if getenv("HBNB_TYPE_STORAGE") != "db":
+        @property
+        def cities(self):
+            """Get a list of all related City objects."""
+            city_list = []
+            for city in list(models.storage.all(City).values()):
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
