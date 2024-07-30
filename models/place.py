@@ -49,7 +49,7 @@ class Place(BaseModel, Base):
     amenity_ids = []
     reviews = relationship("Review", cascade='all, delete, delete-orphan',
                            backref="place")
-    amenities = relationship("Amenity", secondary="place_amenity",
+    amenities = relationship("Amenity", secondary=place_amenity,
                              viewonly=False, back_populates="place_amenities")
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
@@ -72,5 +72,5 @@ class Place(BaseModel, Base):
 
         @amenities.setter
         def amenities(self, value):
-            if type(value) is Amenity:
+            if type(value) is Amenity and value.id not in self.amenity_ids:
                 self.amenity_ids.append(value.id)
